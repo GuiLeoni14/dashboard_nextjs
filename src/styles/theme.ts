@@ -15,6 +15,10 @@ const customTheme = {
             '50': '#EEEEF2',
         },
     },
+    fonts: {
+        heading: 'Roboto', // fonts do títulos da aplicação h1,h2,h3...
+        body: 'Roboto', // fonts do corpo da aplicação
+    },
     styles: {
         global: {
             body: {
