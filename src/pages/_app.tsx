@@ -1,8 +1,18 @@
 import { AppProps } from 'next/app';
-import '../styles/globals.css';
+import { ChakraProvider } from '@chakra-ui/react';
+import { theme } from '../styles/theme';
+import { SidebarDrawerProvider } from '../contexts/SidebarDrawerContext';
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }: AppProps) {
-    return <Component {...pageProps} />;
+    const router = useRouter();
+    return (
+        <ChakraProvider theme={theme}>
+            <SidebarDrawerProvider>
+                <Component {...pageProps} key={router.asPath} />
+            </SidebarDrawerProvider>
+        </ChakraProvider>
+    );
 }
 
 export default MyApp;
