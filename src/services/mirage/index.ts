@@ -40,6 +40,7 @@ export function makeServer() {
                 const users = this.serialize(scheme.all('user')).users.slice(pageStart, pageEnd);
                 return new Response(200, { 'x-total-count': String(total) }, { users });
             });
+            this.get('/users/:id');
             this.post('/users');
 
             this.namespace = ''; // depois de criar as rotas ele reseta o namespace api para não prejudicar as api routes do nextjs
