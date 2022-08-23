@@ -8,17 +8,22 @@ import {
     DrawerOverlay,
     useBreakpointValue,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { useSidebarDrawer } from '../../contexts/SidebarDrawerContext';
 import { SidebarNav } from './SidebarNav';
 
 export function Sidebar() {
     const { isOpen, onClose } = useSidebarDrawer();
-
+    const [isClientSide, setIsClientSide] = useState(false); // tive que colocar esse verificação para retirar o bug, pois sempre isDrawerSidebar começa true
     const isDrawerSidebar = useBreakpointValue({
         base: true,
         lg: false,
     });
-    if (isDrawerSidebar) {
+    useEffect(() => {
+        setIsClientSide(true);
+    }, []);
+
+    if (isClientSide && isDrawerSidebar) {
         return (
             <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
                 <DrawerOverlay>

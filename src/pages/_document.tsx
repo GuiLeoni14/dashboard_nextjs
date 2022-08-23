@@ -1,5 +1,6 @@
+import { ColorModeScript } from '@chakra-ui/react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-
+import { theme } from '../styles/theme';
 export default class MyDocument extends Document {
     render() {
         return (
@@ -12,6 +13,7 @@ export default class MyDocument extends Document {
                         rel="stylesheet"
                     />
                     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+                    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
                 </Head>
                 <body>
                     <Main />
