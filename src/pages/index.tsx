@@ -9,11 +9,11 @@ type SingInFormData = {
     password: string;
 };
 
+const signInFormSchema = yup.object().shape({
+    email: yup.string().required('E-mail obrigatório').email('E-mail com formato inválido'),
+    password: yup.string().required(),
+});
 export default function SingIn() {
-    const signInFormSchema = yup.object().shape({
-        email: yup.string().required('E-mail obrigatório').email('E-mail com formato inválido'),
-        password: yup.string().required(),
-    });
     const { register, handleSubmit, formState } = useForm<SingInFormData>({
         resolver: yupResolver(signInFormSchema),
     });

@@ -5,6 +5,7 @@ import {
     Flex,
     Heading,
     Icon,
+    Spinner,
     Table,
     Tbody,
     Td,
@@ -19,12 +20,49 @@ import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from '../../components/Sidebar';
+import { useQuery } from '@tanstack/react-query';
+
+type User = {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+};
+
+type UserResponseQuery = {
+    users: User[];
+};
 
 export default function PageUserList() {
+    const { data, isLoading, error } = useQuery(
+        ['users'],
+        async () => {
+            const response = await fetch('https://localhost:3000/api/users');
+            const data: UserResponseQuery = await response.json();
+            const users = data.users.map((user) => {
+                return {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                    }),
+                };
+            });
+            return users;
+        },
+        {
+            staleTime: 1000 * 5, // 5 second
+        },
+    );
+
     const isWideVersion = useBreakpointValue({
         base: false,
         lg: true,
     });
+
     return (
         <Box>
             <Header />
@@ -48,77 +86,65 @@ export default function PageUserList() {
                             </Button>
                         </Link>
                     </Flex>
-                    <Table colorScheme="whiteAlpha">
-                        <Thead>
-                            <Tr>
-                                <Th px={['4', '4', '6']} color="gray.300" width="8">
-                                    <Checkbox colorScheme="pink" />
-                                </Th>
-                                <Th>Usuário</Th>
-                                {isWideVersion && <Th>Data de cadastro</Th>}
-                                <Th width="8"></Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            <Tr>
-                                <Td px={['4', '4', '6']}>
-                                    <Checkbox colorScheme="pink" />
-                                </Td>
-                                <Td>
-                                    <Box>
-                                        <Text fontWeight="bold">Guilherme Leoni</Text>
-                                        <Text fontWeight="sm" color="gray.300">
-                                            guilhermeleoni@beepdigital.com.br
-                                        </Text>
-                                    </Box>
-                                </Td>
-                                {isWideVersion && <Td>04 de fevereiro de 2022</Td>}
-                                {isWideVersion && (
-                                    <Td>
-                                        <Button
-                                            as="a"
-                                            size="sm"
-                                            href=""
-                                            fontSize="small"
-                                            colorScheme="purple"
-                                            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                                        >
-                                            Editar
-                                        </Button>
-                                    </Td>
-                                )}
-                            </Tr>
-                            <Tr>
-                                <Td px={['4', '4', '6']}>
-                                    <Checkbox colorScheme="pink" />
-                                </Td>
-                                <Td>
-                                    <Box>
-                                        <Text fontWeight="bold">Guilherme Leoni</Text>
-                                        <Text fontWeight="sm" color="gray.300">
-                                            guilhermeleoni@beepdigital.com.br
-                                        </Text>
-                                    </Box>
-                                </Td>
-                                {isWideVersion && <Td>04 de fevereiro de 2022</Td>}
-                                {isWideVersion && (
-                                    <Td>
-                                        <Button
-                                            as="a"
-                                            size="sm"
-                                            href=""
-                                            fontSize="small"
-                                            colorScheme="purple"
-                                            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                                        >
-                                            Editar
-                                        </Button>
-                                    </Td>
-                                )}
-                            </Tr>
-                        </Tbody>
-                    </Table>
-                    <Pagination />
+                    {isLoading ? (
+                        <Flex justify="center">
+                            <Spinner />
+                        </Flex>
+                    ) : error ? (
+                        <Flex justify="center">
+                            <Text>Falha ao carregar dados</Text>
+                        </Flex>
+                    ) : (
+                        <>
+                            <Table colorScheme="whiteAlpha">
+                                <Thead>
+                                    <Tr>
+                                        <Th px={['4', '4', '6']} color="gray.300" width="8">
+                                            <Checkbox colorScheme="pink" />
+                                        </Th>
+                                        <Th>Usuário</Th>
+                                        {isWideVersion && <Th>Data de cadastro</Th>}
+                                        <Th width="8"></Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {data?.map((user) => {
+                                        return (
+                                            <Tr key={user.id}>
+                                                <Td px={['4', '4', '6']}>
+                                                    <Checkbox colorScheme="pink" />
+                                                </Td>
+                                                <Td>
+                                                    <Box>
+                                                        <Text fontWeight="bold">{user.name}</Text>
+                                                        <Text fontWeight="sm" color="gray.300">
+                                                            {user.email}
+                                                        </Text>
+                                                    </Box>
+                                                </Td>
+                                                {isWideVersion && <Td>{user.createdAt}</Td>}
+                                                {isWideVersion && (
+                                                    <Td>
+                                                        <Button
+                                                            as="a"
+                                                            size="sm"
+                                                            href=""
+                                                            fontSize="small"
+                                                            colorScheme="purple"
+                                                            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                                                        >
+                                                            Editar
+                                                        </Button>
+                                                    </Td>
+                                                )}
+                                            </Tr>
+                                        );
+                                    })}
+                                </Tbody>
+                            </Table>
+                            <Pagination />
+                        </>
+                    )}
                 </Box>
             </Flex>
         </Box>
