@@ -146,3 +146,10 @@ export default function PageUserList() {
         </Box>
     );
 }
+
+// export const getServerSideProps: GetServerSideProps = async () => {
+//     const { users, totalCount } = await getUsers(1);
+//     return {
+//         props: { users },
+//     };
+// };
