@@ -3,6 +3,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from '../components/Form/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 type SingInFormData = {
     email: string;
@@ -11,15 +13,18 @@ type SingInFormData = {
 
 const signInFormSchema = yup.object().shape({
     email: yup.string().required('E-mail obrigatório').email('E-mail com formato inválido'),
-    password: yup.string().required(),
+    password: yup.string().required().min(6, 'No mínimo 6 caracteres'),
 });
 export default function SingIn() {
     const { register, handleSubmit, formState } = useForm<SingInFormData>({
         resolver: yupResolver(signInFormSchema),
     });
-    const handleSignIn: SubmitHandler<SingInFormData> = (data, event) => {
-        console.log(data);
+    const { signIn } = useContext(AuthContext);
+
+    const handleSignIn: SubmitHandler<SingInFormData> = async (data) => {
+        await signIn(data);
     };
+
     return (
         <Flex w="100vw" h="100vh" align="center" justify="center">
             <Flex
