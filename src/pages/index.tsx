@@ -22,7 +22,11 @@ export default function SingIn() {
     const { signIn } = useContext(AuthContext);
 
     const handleSignIn: SubmitHandler<SingInFormData> = async (data) => {
-        await signIn(data);
+        try {
+            await signIn(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (

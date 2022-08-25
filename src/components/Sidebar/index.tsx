@@ -22,8 +22,10 @@ export function Sidebar() {
     useEffect(() => {
         setIsClientSide(true);
     }, []);
-
-    if (isClientSide && isDrawerSidebar) {
+    // useEffect(() => {
+    //     console.log(isDrawerSidebar);
+    // }, [isDrawerSidebar]);
+    if (isDrawerSidebar) {
         return (
             <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
                 <DrawerOverlay>

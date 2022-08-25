@@ -47,7 +47,7 @@ export function makeServer() {
             this.post('/users');
 
             this.namespace = ''; // depois de criar as rotas ele reseta o namespace api para não prejudicar as api routes do nextjs
-            this.passthrough(); // definir quando utilizar nextjs, assim se o miragejs não encontrar a rota e repassas para frente
+            this.passthrough('http://localhost:3333/**'); // definir quando utilizar nextjs, assim se o miragejs não encontrar a rota e repassas para frente
         },
     });
     return server;

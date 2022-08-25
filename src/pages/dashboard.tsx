@@ -3,7 +3,8 @@ import { Header } from '../components/Header';
 import dynamic from 'next/dynamic';
 import { Sidebar } from '../components/Sidebar';
 import { ApexOptions } from 'apexcharts';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
@@ -60,7 +61,7 @@ const series = [{ name: 'series1', data: [31, 120, 10, 28, 52, 18, 109] }];
 
 export default function PageDashboard() {
     const [assembleGraphics, setAssembleGraphics] = useState(false);
-
+    const { user } = useContext(AuthContext);
     useEffect(() => {
         setAssembleGraphics(true);
     }, []);
