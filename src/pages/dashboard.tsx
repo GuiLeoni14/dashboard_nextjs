@@ -5,6 +5,7 @@ import { Sidebar } from '../components/Sidebar';
 import { ApexOptions } from 'apexcharts';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { api } from '../services/api';
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
@@ -61,10 +62,12 @@ const series = [{ name: 'series1', data: [31, 120, 10, 28, 52, 18, 109] }];
 
 export default function PageDashboard() {
     const [assembleGraphics, setAssembleGraphics] = useState(false);
-    const { user } = useContext(AuthContext);
     useEffect(() => {
         setAssembleGraphics(true);
     }, []);
+    useEffect(() => {
+        api.get('http://localhost:3333/me').then((response) => console.log(response));
+    });
     return (
         <Flex direction="column" h="100vh">
             <Header />
