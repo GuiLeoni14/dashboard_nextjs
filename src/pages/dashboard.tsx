@@ -3,8 +3,7 @@ import { Header } from '../components/Header';
 import dynamic from 'next/dynamic';
 import { Sidebar } from '../components/Sidebar';
 import { ApexOptions } from 'apexcharts';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
@@ -66,7 +65,9 @@ export default function PageDashboard() {
         setAssembleGraphics(true);
     }, []);
     useEffect(() => {
-        api.get('http://localhost:3333/me').then((response) => console.log(response));
+        api.get('http://localhost:3333/me')
+            .then((response) => console.log(response))
+            .catch((error) => console.log(error));
     });
     return (
         <Flex direction="column" h="100vh">

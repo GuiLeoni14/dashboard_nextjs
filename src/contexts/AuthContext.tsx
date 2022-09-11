@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../services/api';
-import { parseCookies, setCookie } from 'nookies';
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 type User = {
     email: string;
@@ -26,6 +26,12 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
+export function signOut() {
+    // deslogar o usuário, pois se caiu nessa catch o token está incorreto e o refreshToken não vai ser executado
+    destroyCookie(undefined, 'nextauth.token');
+    destroyCookie(undefined, 'nextauth.refreshToken');
+    Router.push('/');
+}
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User | null>(null);
     const isAuthenticated = !!user;
@@ -38,7 +44,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     const { email, permissions, roles } = response.data;
                     setUser({ email, permissions, roles });
                 })
-                .catch((error) => console.log(error));
+                .catch(() => {
+                    // deslogar o usuário, pois se caiu nessa catch o token está incorreto e o refreshToken não vai ser executado
+                    signOut();
+                });
         }
     }, []);
 
