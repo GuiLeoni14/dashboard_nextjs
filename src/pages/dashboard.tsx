@@ -4,7 +4,9 @@ import dynamic from 'next/dynamic';
 import { Sidebar } from '../components/Sidebar';
 import { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
-import { api } from '../services/api';
+import { withSSRAuth } from '../utils/withSRRAuth';
+import { api } from '../services/apiClient';
+import { setupApiClient } from '../services/api';
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
@@ -94,3 +96,16 @@ export default function PageDashboard() {
         </Flex>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    const apiClient = setupApiClient(ctx);
+    try {
+        const response = await apiClient.get('http://localhost:3333/me');
+        console.log(response.data);
+    } catch (error) {
+        console.log(error);
+    }
+    return {
+        props: {},
+    };
+});

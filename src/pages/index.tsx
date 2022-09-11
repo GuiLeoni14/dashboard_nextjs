@@ -8,6 +8,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { parseCookies } from 'nookies';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { withSSRGuest } from '../utils/withSRRGuest';
+import { setupApiClient } from '../services/api';
 
 type SingInFormData = {
     email: string;
