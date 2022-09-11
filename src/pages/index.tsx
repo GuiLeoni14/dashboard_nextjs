@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { parseCookies } from 'nookies';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { withSSRGuest } from '../utils/withSRRGuest';
 
 type SingInFormData = {
     email: string;
@@ -80,17 +81,8 @@ export default function SingIn() {
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
-    const cookies = parseCookies(ctx);
-    if (cookies['nextauth.token']) {
-        return {
-            redirect: {
-                destination: '/dashboard',
-                permanent: false,
-            },
-        };
-    }
+export const getServerSideProps = withSSRGuest(async (ctx: GetServerSidePropsContext) => {
     return {
         props: {},
     };
-};
+});
