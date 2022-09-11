@@ -5,6 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { parseCookies } from 'nookies';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 
 type SingInFormData = {
     email: string;
@@ -77,3 +79,18 @@ export default function SingIn() {
         </Flex>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    const cookies = parseCookies(ctx);
+    if (cookies['nextauth.token']) {
+        return {
+            redirect: {
+                destination: '/dashboard',
+                permanent: false,
+            },
+        };
+    }
+    return {
+        props: {},
+    };
+};
