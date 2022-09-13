@@ -99,12 +99,9 @@ export default function PageDashboard() {
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
     const apiClient = setupApiClient(ctx);
-    try {
-        const response = await apiClient.get('http://localhost:3333/me');
-        console.log(response.data);
-    } catch (error) {
-        console.log(error);
-    }
+
+    const response = await apiClient.get('http://localhost:3333/me');
+    console.log(response);
     return {
         props: {},
     };

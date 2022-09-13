@@ -5,10 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { parseCookies } from 'nookies';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import { withSSRGuest } from '../utils/withSRRGuest';
-import { setupApiClient } from '../services/api';
 
 type SingInFormData = {
     email: string;
