@@ -16,6 +16,7 @@ type SingInCredentials = {
 
 type AuthContextData = {
     signIn(credentials: SingInCredentials): Promise<void>;
+    signOut(): void;
     user: User;
     isAuthenticated: boolean;
 };
@@ -26,15 +27,35 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
+let authChannel: BroadcastChannel;
+
 export function signOut() {
     // deslogar o usuário, pois se caiu nessa catch o token está incorreto e o refreshToken não vai ser executado
     destroyCookie(undefined, 'nextauth.token');
     destroyCookie(undefined, 'nextauth.refreshToken');
+
+    authChannel.postMessage('signOut');
+
     Router.push('/');
 }
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User | null>(null);
     const isAuthenticated = !!user;
+
+    useEffect(() => {
+        authChannel = new BroadcastChannel('auth');
+
+        authChannel.onmessage = (message) => {
+            switch (message.data) {
+                case 'signOut':
+                    signOut();
+                    authChannel.close();
+                    break;
+                default:
+                    break;
+            }
+        };
+    }, []);
 
     useEffect(() => {
         const { 'nextauth.token': token } = parseCookies();
@@ -78,5 +99,5 @@ export function AuthProvider({ children }: AuthProviderProps) {
             console.log(error);
         }
     };
-    return <AuthContext.Provider value={{ isAuthenticated, signIn, user }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ isAuthenticated, signIn, user, signOut }}>{children}</AuthContext.Provider>;
 }

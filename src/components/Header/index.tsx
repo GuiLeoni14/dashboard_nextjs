@@ -1,14 +1,16 @@
-import { Flex, Icon, IconButton, useBreakpointValue } from '@chakra-ui/react';
+import { Button, Flex, Icon, IconButton, useBreakpointValue } from '@chakra-ui/react';
 import { RiMenu3Line } from 'react-icons/ri';
 import { useSidebarDrawer } from '../../contexts/SidebarDrawerContext';
 import { Logo } from './Logo';
 import { NotificationsNav } from './NotificationsNav';
 import { Profile } from './Profile';
 import { SearchBox } from './SearchBox';
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 
 export function Header() {
     const { onOpen } = useSidebarDrawer();
-
+    const { signOut } = useContext(AuthContext);
     const isWideVersion = useBreakpointValue({
         base: false,
         lg: true,
@@ -28,6 +30,9 @@ export function Header() {
             )}
             <Logo />
             {isWideVersion && <SearchBox />}
+            <Button onClick={signOut} colorScheme="pink">
+                Sair
+            </Button>
             <Flex align="center" ml="auto">
                 <NotificationsNav />
                 <Profile showProfileData={isWideVersion} />
