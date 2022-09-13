@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { withSSRAuth } from '../utils/withSRRAuth';
 import { api } from '../services/apiClient';
 import { setupApiClient } from '../services/api';
+import { useCan } from '../hooks/users/useCan';
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
@@ -63,6 +64,11 @@ const series = [{ name: 'series1', data: [31, 120, 10, 28, 52, 18, 109] }];
 
 export default function PageDashboard() {
     const [assembleGraphics, setAssembleGraphics] = useState(false);
+
+    const userCanSeeMetrics = useCan({
+        roles: ['administrator', 'editor'],
+    });
+
     useEffect(() => {
         setAssembleGraphics(true);
     }, []);
@@ -76,6 +82,7 @@ export default function PageDashboard() {
             <Header />
             <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
                 <Sidebar />
+                {userCanSeeMetrics && <div>Métricas</div>}
                 {assembleGraphics && (
                     <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
                         <Box p={['6', '8']} bg="gray.800" borderRadius={8} pb="4">
