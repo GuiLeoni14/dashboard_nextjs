@@ -7,9 +7,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { api } from '../../services/api';
 import { queryClient } from '../../services/queryClient';
 import { useRouter } from 'next/router';
+import { api } from '../../services/apiClient';
 
 type createUserFormData = {
     name: string;

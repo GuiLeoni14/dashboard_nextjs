@@ -23,8 +23,10 @@ import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from '../../components/Sidebar';
 import { useUsers } from '../../hooks/users/useUsers';
-import { api } from '../../services/api';
+import { setupApiClient } from '../../services/api';
+import { api } from '../../services/apiClient';
 import { queryClient } from '../../services/queryClient';
+import { withSSRAuth } from '../../utils/withSRRAuth';
 
 export default function PageUserList() {
     const [page, setPage] = useState(1);
@@ -147,9 +149,16 @@ export default function PageUserList() {
     );
 }
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//     const { users, totalCount } = await getUsers(1);
-//     return {
-//         props: { users },
-//     };
-// };
+export const getServerSideProps = withSSRAuth(
+    async (ctx) => {
+        const apiClient = setupApiClient(ctx);
+        await apiClient.get('http://localhost:3333/me');
+        return {
+            props: {},
+        };
+    },
+    {
+        permissions: ['metrics.list'],
+        roles: ['administrator'],
+    },
+);
